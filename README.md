@@ -112,7 +112,7 @@ Ensure you are logged in with an identity that has the following permissions:
 1. Start the backend API:
    ```
    cd Backend
-   flask run
+   flask --app chat_app run
    ```
    The API will be available at `https://localhost:5000`
 

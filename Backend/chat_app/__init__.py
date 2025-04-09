@@ -6,9 +6,9 @@ from flask import Flask, request, jsonify
 from azure.identity import DefaultAzureCredential
 from azure.appconfiguration.provider import load, WatchKey
 from pydantic import ValidationError
-from azure_open_ai_service import AzureOpenAIService
-from llm_configuration import LLMConfiguration, AzureOpenAIConnectionInfo
-from models import ChatRequest
+from .azure_open_ai_service import AzureOpenAIService
+from .llm_configuration import LLMConfiguration, AzureOpenAIConnectionInfo
+from .models import ChatRequest
 
 app = Flask(__name__)
 

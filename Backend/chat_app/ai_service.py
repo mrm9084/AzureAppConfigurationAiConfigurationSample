@@ -1,12 +1,13 @@
 """
 AI Service Interface
 """
+
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from email.utils import format_datetime
 from typing import List, Optional
-from models import ChatRequest, ChatResponse, ChatbotMessage
-from llm_configuration import LLMConfiguration, AzureOpenAIConnectionInfo
+from .models import ChatRequest, ChatResponse, ChatbotMessage
+from .llm_configuration import LLMConfiguration, AzureOpenAIConnectionInfo
 
 
 class AIService(ABC):

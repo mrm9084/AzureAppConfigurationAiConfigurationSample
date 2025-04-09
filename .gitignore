@@ -99,3 +99,4 @@ dist-ssr
 /env
 /Backend/.vscode
 /Backend/__pycache__
+/Backend/chat_app/__pycache__

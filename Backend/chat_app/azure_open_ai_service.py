@@ -5,9 +5,9 @@ Azure OpenAI Service wrapper for chat completion.
 import logging
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 from openai import AzureOpenAI
-from models import ChatRequest, ChatResponse
-from llm_configuration import AzureOpenAIConnectionInfo, LLMConfiguration
-from ai_service import AIService
+from .models import ChatRequest, ChatResponse
+from .llm_configuration import AzureOpenAIConnectionInfo, LLMConfiguration
+from .ai_service import AIService
 
 
 logger = logging.getLogger(__name__)
