@@ -37,17 +37,8 @@ class AzureOpenAIService(AIService):
         """
         Get chat completion from Azure OpenAI service.
         """
-        messages = self._get_system_messages()
-
-        # Add conversation history
-        for message in request.history:
-            messages.append({"role": message.role, "content": message.content})
-
-        # Add current user message
-        messages.append({"role": "user", "content": request.message})
-
         response = self.client.chat.completions.create(
-            messages=messages,
+            messages=self._update_messages(request),
             max_tokens=self.model_config.max_completion_tokens,
             temperature=self.model_config.temperature,
             top_p=1.0,
