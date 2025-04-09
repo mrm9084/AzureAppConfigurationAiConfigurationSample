@@ -3,18 +3,17 @@ Azure OpenAI Service wrapper for chat completion.
 """
 
 import logging
-from datetime import datetime, timezone
-from email.utils import format_datetime
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 from openai import AzureOpenAI
-from models import ChatRequest, ChatResponse, ChatbotMessage
+from models import ChatRequest, ChatResponse
 from llm_configuration import AzureOpenAIConnectionInfo, LLMConfiguration
+from ai_service import AIService
 
 
 logger = logging.getLogger(__name__)
 
 
-class AzureOpenAIService:
+class AzureOpenAIService(AIService):
     """
     Azure OpenAI Service wrapper for chat completion.
     """
@@ -22,12 +21,7 @@ class AzureOpenAIService:
     def __init__(
         self, connection_info: AzureOpenAIConnectionInfo, model_config: LLMConfiguration
     ):
-        if not connection_info:
-            raise ValueError("connection_info cannot be None")
-        if not model_config:
-            raise ValueError("model_config cannot be None")
-
-        self.model_config = model_config
+        super().__init__(connection_info, model_config)
 
         token_provider = get_bearer_token_provider(
             DefaultAzureCredential(), "https://cognitiveservices.azure.com/.default"
@@ -62,28 +56,7 @@ class AzureOpenAIService:
 
         response_content = response.choices[0].message.content
 
-        # Update history
-        history = request.history.copy()
-        history.append(
-            ChatbotMessage(
-                role="user",
-                content=request.message,
-                timestamp=format_datetime(datetime.now(tz=timezone.utc)),
-            )
+        return ChatResponse(
+            message=response_content,
+            history=self._update_history(response_content, request),
         )
-        history.append(
-            ChatbotMessage(
-                role="assistant",
-                content=response_content,
-                timestamp=format_datetime(datetime.now(tz=timezone.utc)),
-            )
-        )
-
-        return ChatResponse(message=response_content, history=history)
-
-    def _get_system_messages(self):
-        return [
-            {"role": "system", "content": msg.content}
-            for msg in self.model_config.messages
-            if msg.role.lower() == "system"
-        ]

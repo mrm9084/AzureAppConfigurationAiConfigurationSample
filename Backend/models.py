@@ -7,6 +7,7 @@ from email.utils import format_datetime
 from typing import List, Optional
 from pydantic import BaseModel
 
+
 class ChatbotMessage(BaseModel):
     """Represents a message in the chat history."""
 
