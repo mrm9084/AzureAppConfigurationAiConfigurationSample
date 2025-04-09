@@ -2,31 +2,28 @@
 This module defines the data models used in the chat application.
 """
 
-from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List
+from email.utils import format_datetime
+from typing import List, Optional
+from pydantic import BaseModel
 
-
-@dataclass
-class ChatbotMessage:
+class ChatbotMessage(BaseModel):
     """Represents a message in the chat history."""
 
-    role: str = ""
-    content: str | None = ""
-    timestamp: datetime = field(default_factory=datetime.utcnow)
+    role: str
+    content: Optional[str] = None
+    timestamp: str = format_datetime(datetime.now())
 
 
-@dataclass
-class ChatRequest:
+class ChatRequest(BaseModel):
     """Represents a chat request."""
 
-    message: str = ""
-    history: List[ChatbotMessage] = field(default_factory=list)
+    message: str
+    history: List[ChatbotMessage] = []
 
 
-@dataclass
-class ChatResponse:
+class ChatResponse(BaseModel):
     """Represents a chat response."""
 
-    message: str | None = ""
-    history: List[ChatbotMessage] = field(default_factory=list)
+    message: Optional[str] = None
+    history: List[ChatbotMessage] = []

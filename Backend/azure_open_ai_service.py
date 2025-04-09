@@ -4,6 +4,7 @@ Azure OpenAI Service wrapper for chat completion.
 
 import logging
 from datetime import datetime, timezone
+from email.utils import format_datetime
 from azure.identity import DefaultAzureCredential, get_bearer_token_provider
 from openai import AzureOpenAI
 from models import ChatRequest, ChatResponse, ChatbotMessage
@@ -67,14 +68,14 @@ class AzureOpenAIService:
             ChatbotMessage(
                 role="user",
                 content=request.message,
-                timestamp=datetime.now(tz=timezone.utc),
+                timestamp=format_datetime(datetime.now(tz=timezone.utc)),
             )
         )
         history.append(
             ChatbotMessage(
                 role="assistant",
                 content=response_content,
-                timestamp=datetime.now(tz=timezone.utc),
+                timestamp=format_datetime(datetime.now(tz=timezone.utc)),
             )
         )
 

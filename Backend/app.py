@@ -7,7 +7,8 @@ from azure.identity import DefaultAzureCredential
 from azure.appconfiguration.provider import load, WatchKey
 from azure_open_ai_service import AzureOpenAIService
 from llm_configuration import LLMConfiguration, AzureOpenAIConnectionInfo
-from models import ChatRequest, ChatbotMessage
+from models import ChatRequest
+from pydantic import ValidationError
 
 app = Flask(__name__)
 
@@ -44,17 +45,15 @@ def chat():
     try:
         data = request.get_json()
 
-        # Convert history from list of dicts to list of ChatbotMessage objects
-        if "history" in data:
-            data["history"] = [ChatbotMessage(**message) for message in data["history"]]
-
+        # Validate and parse the request using Pydantic
         message = ChatRequest(**data)
 
-        if not message:
-            return jsonify({"error": "Message cannot be empty"}), 400
-
         response = openai_service.get_chat_completion(message)
-        return jsonify(response), 200
+        return jsonify(response.dict()), 200
+
+    except ValidationError as ve:
+        logger.error("Validation error: %s", ve)
+        return jsonify({"error": "Invalid request data", "details": ve.errors()}), 400
 
     except Exception as ex:
         logger.error("Error processing chat request: %s", ex)
